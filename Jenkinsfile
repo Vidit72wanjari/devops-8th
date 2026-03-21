@@ -36,11 +36,8 @@ pipeline {
                 echo 'Setting up Python environment...'
                 bat '''
                 python -m venv venv
-
                 call venv\\Scripts\\activate
-
                 python -m pip install --upgrade pip
-
                 pip install selenium webdriver-manager pytest pytest-html
                 '''
             }
@@ -52,21 +49,19 @@ pipeline {
                 echo 'Checking syntax...'
                 bat '''
                 call venv\\Scripts\\activate
-
                 python -m py_compile test_feedback_form.py
+                echo Syntax OK
                 '''
             }
         }
 
-        // ─────────────── Run Tests ───────────────
+        // ─────────────── Run Selenium Tests ───────────────
         stage('Run Selenium Tests') {
             steps {
                 echo 'Running Selenium tests...'
                 bat '''
                 if not exist test-reports mkdir test-reports
-
                 call venv\\Scripts\\activate
-
                 python -m pytest test_feedback_form.py ^
                 --verbose ^
                 --tb=short ^
@@ -84,19 +79,19 @@ pipeline {
             }
             post {
                 always {
-                    junit testResults: "test-reports/junit-results.xml",
+                    junit testResults: 'test-reports/junit-results.xml',
                           allowEmptyResults: true
 
-                    archiveArtifacts artifacts: "test-reports/**",
+                    archiveArtifacts artifacts: 'test-reports/**',
                                      allowEmptyArchive: true
 
                     publishHTML(target: [
-                        allowMissing: false,
+                        allowMissing:          false,
                         alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: "test-reports",
-                        reportFiles: 'test-report.html',
-                        reportName: 'Selenium Test Report'
+                        keepAll:               true,
+                        reportDir:             'test-reports',
+                        reportFiles:           'test-report.html',
+                        reportName:            'Selenium Test Report'
                     ])
                 }
             }
@@ -106,13 +101,20 @@ pipeline {
     // ─────────────── Post Build ───────────────
     post {
         success {
-            echo 'BUILD SUCCESS: All tests passed'
+            echo '╔══════════════════════════════════════╗'
+            echo '║  BUILD SUCCESS: All tests passed     ║'
+            echo '╚══════════════════════════════════════╝'
         }
         failure {
-            echo 'BUILD FAILED: Check console output'
+            echo '╔══════════════════════════════════════╗'
+            echo '║  BUILD FAILED: Check console output  ║'
+            echo '╚══════════════════════════════════════╝'
+        }
+        unstable {
+            echo 'BUILD UNSTABLE: Some tests had warnings'
         }
         always {
-            echo "Build finished: ${currentBuild.result}"
+            echo "Build #${BUILD_NUMBER} of ${PROJECT_NAME} finished. Status: ${currentBuild.result}"
             cleanWs()
         }
     }
