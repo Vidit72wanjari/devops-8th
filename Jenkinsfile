@@ -76,6 +76,7 @@ pipeline {
         stage('Publish Results') {
             steps {
                 echo 'Publishing results...'
+                bat 'echo Report saved at: %WORKSPACE%\\test-reports\\test-report.html'
             }
             post {
                 always {
@@ -84,15 +85,6 @@ pipeline {
 
                     archiveArtifacts artifacts: 'test-reports/**',
                                      allowEmptyArchive: true
-
-                    publishHTML(target: [
-                        allowMissing:          false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll:               true,
-                        reportDir:             'test-reports',
-                        reportFiles:           'test-report.html',
-                        reportName:            'Selenium Test Report'
-                    ])
                 }
             }
         }
