@@ -9,7 +9,6 @@ pipeline {
     environment {
         PROJECT_NAME = 'Student-Feedback-Form'
         REPORT_DIR   = 'test-reports'
-        VENV_DIR     = 'venv'
     }
 
     options {
@@ -20,7 +19,6 @@ pipeline {
 
     stages {
 
-        // ─────────────── Checkout ───────────────
         stage('Checkout') {
             steps {
                 echo 'Checking out source code...'
@@ -30,7 +28,6 @@ pipeline {
             }
         }
 
-        // ─────────────── Setup Environment ───────────────
         stage('Setup Environment') {
             steps {
                 echo 'Setting up Python environment...'
@@ -43,7 +40,6 @@ pipeline {
             }
         }
 
-        // ─────────────── Lint ───────────────
         stage('Lint') {
             steps {
                 echo 'Checking syntax...'
@@ -55,10 +51,9 @@ pipeline {
             }
         }
 
-        // ─────────────── Run Selenium Tests ───────────────
         stage('Run Selenium Tests') {
             steps {
-                echo 'Running Selenium tests...'
+                echo 'Running Selenium tests (headless for CI)...'
                 bat '''
                 if not exist test-reports mkdir test-reports
                 call venv\\Scripts\\activate
@@ -72,17 +67,15 @@ pipeline {
             }
         }
 
-        // ─────────────── Publish Results ───────────────
         stage('Publish Results') {
             steps {
                 echo 'Publishing results...'
-                bat 'echo Report saved at: %WORKSPACE%\\test-reports\\test-report.html'
+                bat 'echo Report: %WORKSPACE%\\test-reports\\test-report.html'
             }
             post {
                 always {
                     junit testResults: 'test-reports/junit-results.xml',
                           allowEmptyResults: true
-
                     archiveArtifacts artifacts: 'test-reports/**',
                                      allowEmptyArchive: true
                 }
@@ -90,7 +83,6 @@ pipeline {
         }
     }
 
-    // ─────────────── Post Build ───────────────
     post {
         success {
             echo '╔══════════════════════════════════════╗'
@@ -101,9 +93,6 @@ pipeline {
             echo '╔══════════════════════════════════════╗'
             echo '║  BUILD FAILED: Check console output  ║'
             echo '╚══════════════════════════════════════╝'
-        }
-        unstable {
-            echo 'BUILD UNSTABLE: Some tests had warnings'
         }
         always {
             echo "Build #${BUILD_NUMBER} of ${PROJECT_NAME} finished. Status: ${currentBuild.result}"

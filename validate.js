@@ -175,14 +175,31 @@ function resetForm() {
   updateWordCount();
 }
 
-// ── Success Toast ─────────────────────────────────────────────────────────────
+// ── Success Banner (permanent, inside form, form stays open) ─────────────────
 function showSuccessToast() {
+  const name  = document.getElementById("studentName").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  // Show the fixed bottom toast briefly
   const toast = document.getElementById("successToast");
-  if (!toast) return;
-  const name = document.getElementById("studentName").value.trim().split(" ")[0];
-  toast.innerHTML = `✅ <strong>Feedback submitted!</strong><br><span style="font-size:12px;opacity:.85">Thank you, ${name}. Your response has been recorded.</span>`;
-  toast.style.display = "block";
-  setTimeout(() => { toast.style.display = "none"; }, 4500);
+  if (toast) {
+    toast.innerHTML = `✅ <strong>Feedback Submitted!</strong><br><span style="font-size:12px;opacity:.85">Thank you, ${name.split(" ")[0]}. Your response has been recorded.</span>`;
+    toast.style.display = "block";
+    // Do NOT auto-hide — keep it visible
+  }
+
+  // Show the in-form success banner
+  const banner = document.getElementById("successBanner");
+  if (banner) {
+    banner.innerHTML = `
+      <div class="success-icon">✓</div>
+      <div class="success-text">
+        <strong>Feedback Submitted Successfully!</strong>
+        <p>Thank you, <em>${name}</em>. Your feedback has been recorded and sent to <em>${email}</em>. The form remains open — you may update and resubmit anytime.</p>
+      </div>`;
+    banner.style.display = "flex";
+    banner.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
 }
 
 // ── Progress indicator (optional visual feedback) ─────────────────────────────
