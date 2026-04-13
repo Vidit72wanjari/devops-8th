@@ -1,11 +1,7 @@
-/* ============================================================
-   style.css  –  External CSS for Student Feedback Form
-   Aesthetic: Academic-meets-modern, deep navy + amber accent
-   ============================================================ */
+
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap');
 
-/* ── CSS Custom Properties ── */
 :root {
   --navy:       #0f1f3d;
   --navy-mid:   #162848;

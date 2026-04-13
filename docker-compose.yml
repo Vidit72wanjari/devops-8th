@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5004:80"
+
+  helper:
+    image: alpine
+    command: sh -c "while true; do echo Running second container; sleep 5; done"

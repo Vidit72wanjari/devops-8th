@@ -1,7 +1,4 @@
-/**
- * validate.js  –  Sub Task 3: JavaScript Form Validation
- * Student Feedback Registration Form
- */
+
 
 "use strict";
 
