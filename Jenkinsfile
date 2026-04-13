@@ -7,12 +7,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                echo 'Code fetched from GitHub'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t feedback-app .'
@@ -36,10 +30,10 @@ pipeline {
 
     post {
         success {
-            echo 'End-to-End Pipeline SUCCESS'
+            echo 'Pipeline SUCCESS ✅'
         }
         failure {
-            echo 'Pipeline FAILED'
+            echo 'Pipeline FAILED ❌'
         }
     }
 }
