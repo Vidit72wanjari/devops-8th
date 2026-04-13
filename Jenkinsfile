@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/Vidit72wanjari/devops-8th.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t feedback-app .'
