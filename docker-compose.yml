@@ -1,11 +1,9 @@
-version: '3'
-
 services:
   web:
     build: .
     ports:
-      - "5004:80"
+      - "5006:80"
 
   helper:
     image: alpine
-    command: sh -c "while true; do echo Running second container; sleep 5; done"
+    command: sh -c "while true; do echo DevOps Pipeline Running; sleep 5; done"
