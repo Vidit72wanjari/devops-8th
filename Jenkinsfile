@@ -7,29 +7,36 @@ pipeline {
 
     stages {
 
+        stage('Checkout Code') {
+            steps {
+                echo 'Code fetched from GitHub'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t feedback-app .'
             }
         }
 
-        stage('Run Docker Compose') {
+        stage('Deploy using Docker Compose') {
             steps {
                 bat 'docker-compose down'
                 bat 'docker-compose up -d'
             }
         }
 
-        stage('Verify Deployment') {
+        stage('Monitor Containers') {
             steps {
                 bat 'docker ps'
+                bat 'docker stats --no-stream'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline SUCCESS'
+            echo 'End-to-End Pipeline SUCCESS'
         }
         failure {
             echo 'Pipeline FAILED'
