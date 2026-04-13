@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HOST = "tcp://localhost:2375"
+    }
+
     stages {
 
         stage('Build Docker Image') {
@@ -25,10 +29,10 @@ pipeline {
 
     post {
         success {
-            echo 'CI/CD Pipeline Executed Successfully'
+            echo 'Pipeline SUCCESS'
         }
         failure {
-            echo 'Pipeline Failed'
+            echo 'Pipeline FAILED'
         }
     }
 }
